@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteName, setDeleteName] = useState("");
 
   const fetchUsers = async () => {
     if (!token) {
@@ -32,8 +33,41 @@ const Dashboard = () => {
     setIsLoading(false);
   };
 
+  const deleteUser = async () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    const userToDelete=users.find((user)=>user.name===deleteName);
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/delete/${userToDelete.name}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // Authorization token
+        },
+      });
+
+      if (response.ok) {
+        console.log(`User ${deleteName} deleted successfully`);
+        setUsers(users.filter((user) => user.name !== deleteName));
+        setDeleteName(""); // Clear the input after deletion
+      } else {
+        console.log(`Failed to delete user ${deleteName}`);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("An error occurred while deleting the user.");
+    }
+  };
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleDeleteInput = (e) => {
+    setDeleteName(e.target.value);
   };
 
   return (
@@ -58,6 +92,27 @@ const Dashboard = () => {
           <div className="text-center mb-3">
             <Button variant="primary" onClick={fetchUsers} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Fetch Users'}
+            </Button>
+          </div>
+
+          <Form className="mb-3 text-center">
+            <Form.Group controlId="deleteUser">
+              <Form.Control
+                type="text"
+                placeholder="Enter name to delete"
+                value={deleteName}
+                onChange={handleDeleteInput}
+                className="w-50 mx-auto"
+              />
+            </Form.Group>
+          </Form>
+
+          <div className="text-center mb-3">
+            <Button
+              variant="primary"
+              onClick={deleteUser}
+            >
+              Delete User
             </Button>
           </div>
 
