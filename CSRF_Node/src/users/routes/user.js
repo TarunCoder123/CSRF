@@ -9,4 +9,6 @@ router.use(cors());
 
 router.get("/users",authMiddleware.authenticateToken,userController.getUsers);
 
+router.delete("/delete/:name", userController.deleteUser);
+
 module.exports=router;

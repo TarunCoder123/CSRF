@@ -8,14 +8,18 @@ const bodyParser=require("body-parser");
 const cors=require("cors");
 const app=express();
 const PORT=process.env.PORT || 5000;
+// const cors = require("cors");
+// const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
 
+// const csrfProtection = csrf({ cookie: true });
 initiDB();
 
 app.use(bodyParser.json());
 app.use(cors());
 
 
-createAdminAccount();
+// createAdminAccount();
 
 app.use("/user",signupRoute);
 app.use("/auth",loginRoute);

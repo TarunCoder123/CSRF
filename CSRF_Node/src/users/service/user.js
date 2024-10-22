@@ -13,6 +13,23 @@ async function getUsers(name){
     }
 }
 
+async function deleteUserByName(name) {
+    try {
+      if (!name) throw new Error("Name is required");
+  
+      const result = await User.findOneAndDelete({ name });
+      if (!result) {
+        throw new Error(`User with name ${name} not found`);
+      }
+      console.log(`User ${name} deleted successfully`);
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
 module.exports={
-    getUsers
+    getUsers,
+    deleteUserByName,
 };
