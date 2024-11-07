@@ -32,6 +32,15 @@ const Login = () => {
         const result=await response.json();// waha so jo body me set kar rahe ho usko header me set kar and yaha header se nikalo ......
         localStorage.setItem("token",result.token);
         console.log(result);
+        // Now we put the value in the meta tag 
+        const csrfMetaTag=document.querySelector("meta[name='csrf-token]");
+        if(csrfMetaTag){
+          csrfMetaTag.setAttribute("content",result.csrfT);
+        }else{
+          console.log("Error from the developer side");
+        }
+
+        console.log(result.csrfT);
         navigate("/dashboard");
     } catch (error) {
       console.error(error.message);
