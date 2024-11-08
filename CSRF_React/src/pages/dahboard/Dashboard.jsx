@@ -42,10 +42,15 @@ const Dashboard = () => {
     const userToDelete=users.find((user)=>user.name===deleteName);
 
     try {
+
+      const csrfMetaTag=document.querySelector("meta[name='csrf-token']");
+      const csrfToken = csrfMetaTag ? csrfMetaTag.getAttribute("content") : null;
+
       const response = await fetch(`http://localhost:5000/api/delete/${userToDelete.name}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`, // Authorization token
+          "X-CSRF-Token": csrfToken, 
         },
       });
 
